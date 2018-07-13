@@ -19,21 +19,26 @@ public class Zkp_i1Test {
      @Test
     public void testZKPi1RoundTrip() {
         // GIVEN
+        BigInteger secret = new BigInteger("5");
+
         PaillierPrivateKey paillierPrivateKey = KeyGen.PaillierKey(512, 122333356);
+//         BigInteger p = BigInteger.valueOf(463);
+//         BigInteger q = BigInteger.valueOf(631);
+
+//         PaillierPrivateKey paillierPrivateKey = new PaillierPrivateKey(p,q,0);
         Paillier paillier = new Paillier(paillierPrivateKey);
+         paillier.setEncryption(paillierPrivateKey);
+//        BigInteger eta = Util.randomFromZn(BitcoinParams.q, new SecureRandom());
+         BigInteger eta = BigInteger.valueOf(11);
+//        BigInteger r = paillierPrivateKey.getPublicKey().getRandomModNStar();
+         BigInteger r = BigInteger.valueOf(13);
 
-        BigInteger eta = Util.randomFromZn(BitcoinParams.q, new SecureRandom());
-        BigInteger r = paillierPrivateKey.getPublicKey().getRandomModNStar();
-
-
-        BigInteger secret = new BigInteger("12312312");
         BigInteger c2 = Paillier.encrypt(secret, r, paillierPrivateKey); //encryptedDSAKey
-
         BigInteger c1 = paillier.multiply(c2, eta);
         BigInteger c3 = paillier.encrypt(eta, r);
 
 
-        int kPrime = 15; // provided some random value, need to understand what is it
+        int kPrime = 32; // provided some random value, need to understand what is it
         PublicParameters zkpParams = Util.generateParamsforBitcoin(
                 paillierPrivateKey.getK(),
                 kPrime,
